@@ -1,14 +1,7 @@
-# Capstone Project Template
+# Mindful Map
 
-This project was created from the neuefische Next.js template.
+Find your new favorite location for a mindful moment outside and share it with the community
 
-## Local development
+## How It Works
 
-To run project commands locally, you need to install the dependencies using `npm i` first.
-
-You can then use the following commands:
-
-- `npm run dev` to start the development server
-- `npm run build` to create a production build
-- `npm run start` to start the production build
-- `npm run test` to run the tests in watch mode (if available)
+The Mindful Map is an application that helps you find and add beautiful spots in your city for a short time out or meditation
