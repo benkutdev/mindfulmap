@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-export default function CreateMindfulSpotForm() {
+export default function MindfulForm() {
   const [location, setLocation] = useState("");
   const [nature, setNature] = useState(false);
   const [city, setCity] = useState(false);
