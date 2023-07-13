@@ -28,6 +28,12 @@ const QualityContainer = styled.div`
   margin-bottom: 10px;
 `;
 
+const PhotoContainer = styled.div`
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+`;
+
 export default function MindfulForm() {
   const [location, setLocation] = useState("");
   const [nature, setNature] = useState(false);
@@ -44,6 +50,11 @@ export default function MindfulForm() {
     console.log("Form submitted");
   };
 
+  const handlePhotoChange = (e) => {
+    const file = e.target.files[0];
+    setPhoto(file);
+  };
+
   return (
     <FormContainer>
       <StyledForm onSubmit={handleSubmit}>
@@ -56,7 +67,6 @@ export default function MindfulForm() {
             required
           />
         </Label>
-        <Label>Filters:</Label>
         <CheckboxContainer>
           <label>
             Nature
@@ -120,6 +130,16 @@ export default function MindfulForm() {
           </Label>
           <span>{quality}</span>
         </QualityContainer>
+        <PhotoContainer>
+        <Label>
+          Photo:
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handlePhotoChange}
+          />
+        </Label>
+        </PhotoContainer>
         <div>
           <button type="submit">Create Mindful Spot</button>
         </div>
