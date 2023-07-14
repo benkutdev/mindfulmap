@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import LocationCard from "../LocationCard/LocationCard";
 
 const FormContainer = styled.div`
   max-width: 400px;
@@ -46,6 +47,15 @@ export default function MindfulForm() {
     quality: 1,
     photo: null
   });
+  const [submitted, setSubmitted] = useState(false);
+
+  useEffect(() => {
+    const savedState = JSON.parse(localStorage.getItem('locationData'));
+    if (savedState) {
+      setFormState(savedState);
+      setSubmitted(true);
+    }
+  }, []);
 
   const handleCheckboxChange = (field) => (e) => {
     setFormState({ ...formState, [field]: e.target.checked });
@@ -68,8 +78,8 @@ export default function MindfulForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log("Form submitted");
+    localStorage.setItem('locationData', JSON.stringify(formState));
+    setSubmitted(true);
   };
 
   return (
@@ -161,6 +171,7 @@ export default function MindfulForm() {
           <button type="submit">Create Mindful Spot</button>
         </div>
       </StyledForm>
+      {submitted && <LocationCard {...formState} />}
     </FormContainer>
   );
 }
