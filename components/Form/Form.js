@@ -2,39 +2,15 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import LocationCard from "../LocationCard/LocationCard";
 
-const FormContainer = styled.div`
-  max-width: 400px;
-  margin: 0 auto;
-`;
-
-const StyledForm = styled.form`
-  display: flex;
-  flex-direction: column;
-  margin-top: 20px;
-`;
-
-const Label = styled.label`
-  margin-bottom: 10px;
-`;
-
-const CheckboxContainer = styled.div`
+// Create a single styled container for form fields to reduce duplication
+const FieldContainer = styled.div`
   display: flex;
   gap: 10px;
   margin-bottom: 10px;
+  align-items: ${props => props.centered ? 'center' : 'flex-start'};
 `;
 
-const QualityContainer = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-`;
-
-const PhotoContainer = styled.div`
-  display: flex;
-  gap: 10px;
-  margin-bottom: 10px;
-`;
-
+// Use destructuring assignment for the formState to make the formState references more concise
 export default function MindfulForm() {
   const [formState, setFormState] = useState({
     location: "",
@@ -47,7 +23,9 @@ export default function MindfulForm() {
     quality: 1,
     photo: null
   });
+
   const [submitted, setSubmitted] = useState(false);
+  const {location, nature, city, loud, calm, crowdy, clean, quality, photo} = formState;
 
   useEffect(() => {
     const savedState = JSON.parse(localStorage.getItem('locationData'));
@@ -83,95 +61,63 @@ export default function MindfulForm() {
   };
 
   return (
-    <FormContainer>
-      <StyledForm onSubmit={handleSubmit}>
-        <Label>
+    <form onSubmit={handleSubmit}>
+      <FieldContainer>
+        <label>
           Location:
           <input
             type="text"
-            value={formState.location}
+            value={location}
             onChange={handleFieldChange('location')}
             required
           />
-        </Label>
-        <CheckboxContainer>
-          <label>
-            Nature
+        </label>
+      </FieldContainer>
+
+      {/* Create an array of checkbox labels and map over them to reduce code duplication */}
+      <FieldContainer>
+        {['Nature', 'City', 'Loud', 'Calm', 'Crowdy', 'Clean'].map((label) => (
+          <label key={label}>
+            {label}
             <input
               type="checkbox"
-              checked={formState.nature}
-              onChange={handleCheckboxChange('nature')}
+              checked={formState[label.toLowerCase()]}
+              onChange={handleCheckboxChange(label.toLowerCase())}
             />
           </label>
-          <label>
-            City
-            <input
-              type="checkbox"
-              checked={formState.city}
-              onChange={handleCheckboxChange('city')}
-            />
-          </label>
-          <label>
-            Loud
-            <input
-              type="checkbox"
-              checked={formState.loud}
-              onChange={handleCheckboxChange('loud')}
-            />
-          </label>
-          <label>
-            Calm
-            <input
-              type="checkbox"
-              checked={formState.calm}
-              onChange={handleCheckboxChange('calm')}
-            />
-          </label>
-          <label>
-            Crowdy
-            <input
-              type="checkbox"
-              checked={formState.crowdy}
-              onChange={handleCheckboxChange('crowdy')}
-            />
-          </label>
-          <label>
-            Clean
-            <input
-              type="checkbox"
-              checked={formState.clean}
-              onChange={handleCheckboxChange('clean')}
-            />
-          </label>
-        </CheckboxContainer>
-        <QualityContainer>
-          <Label>
-            Quality:
-            <input
-              type="range"
-              min={1}
-              max={10}
-              value={formState.quality}
-              onChange={handleQualityChange}
-            />
-          </Label>
-          <span>{formState.quality}</span>
-        </QualityContainer>
-        <PhotoContainer>
-        <Label>
+        ))}
+      </FieldContainer>
+
+      <FieldContainer centered>
+        <label>
+          Quality:
+          <input
+            type="range"
+            min={1}
+            max={10}
+            value={quality}
+            onChange={handleQualityChange}
+          />
+        </label>
+        <span>{quality}</span>
+      </FieldContainer>
+
+      <FieldContainer>
+        <label>
           Photo:
           <input
             type="file"
             accept="image/*"
             onChange={handlePhotoChange}
           />
-        </Label>
-        </PhotoContainer>
-        <div>
-          <button type="submit">Create Mindful Spot</button>
-        </div>
-      </StyledForm>
+        </label>
+      </FieldContainer>
+
+      <FieldContainer>
+        <button type="submit">Create Mindful Spot</button>
+      </FieldContainer>
+
       {submitted && <LocationCard {...formState} />}
-    </FormContainer>
+    </form>
   );
 }
