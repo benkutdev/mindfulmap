@@ -35,24 +35,41 @@ const PhotoContainer = styled.div`
 `;
 
 export default function MindfulForm() {
-  const [location, setLocation] = useState("");
-  const [nature, setNature] = useState(false);
-  const [city, setCity] = useState(false);
-  const [loud, setLoud] = useState(false);
-  const [calm, setCalm] = useState(false);
-  const [crowdy, setCrowdy] = useState(false);
-  const [clean, setClean] = useState(false);
-  const [quality, setQuality] = useState(1);
+  const [formState, setFormState] = useState({
+    location: "",
+    nature: false,
+    city: false,
+    loud: false,
+    calm: false,
+    crowdy: false,
+    clean: false,
+    quality: 1,
+    photo: null
+  });
+
+  const handleCheckboxChange = (field) => (e) => {
+    setFormState({ ...formState, [field]: e.target.checked });
+  };
+
+  const handleFieldChange = (field) => (e) => {
+    setFormState({ ...formState, [field]: e.target.value });
+  };
+
+  const handleQualityChange = (e) => {
+    setFormState({ ...formState, quality: parseInt(e.target.value) });
+  };
+
+  const handlePhotoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFormState({ ...formState, photo: file });
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle form submission logic here
     console.log("Form submitted");
-  };
-
-  const handlePhotoChange = (e) => {
-    const file = e.target.files[0];
-    setPhoto(file);
   };
 
   return (
@@ -62,8 +79,8 @@ export default function MindfulForm() {
           Location:
           <input
             type="text"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
+            value={formState.location}
+            onChange={handleFieldChange('location')}
             required
           />
         </Label>
@@ -72,48 +89,48 @@ export default function MindfulForm() {
             Nature
             <input
               type="checkbox"
-              checked={nature}
-              onChange={(e) => setNature(e.target.checked)}
+              checked={formState.nature}
+              onChange={handleCheckboxChange('nature')}
             />
           </label>
           <label>
             City
             <input
               type="checkbox"
-              checked={city}
-              onChange={(e) => setCity(e.target.checked)}
+              checked={formState.city}
+              onChange={handleCheckboxChange('city')}
             />
           </label>
           <label>
             Loud
             <input
               type="checkbox"
-              checked={loud}
-              onChange={(e) => setLoud(e.target.checked)}
+              checked={formState.loud}
+              onChange={handleCheckboxChange('loud')}
             />
           </label>
           <label>
             Calm
             <input
               type="checkbox"
-              checked={calm}
-              onChange={(e) => setCalm(e.target.checked)}
+              checked={formState.calm}
+              onChange={handleCheckboxChange('calm')}
             />
           </label>
           <label>
             Crowdy
             <input
               type="checkbox"
-              checked={crowdy}
-              onChange={(e) => setCrowdy(e.target.checked)}
+              checked={formState.crowdy}
+              onChange={handleCheckboxChange('crowdy')}
             />
           </label>
           <label>
             Clean
             <input
               type="checkbox"
-              checked={clean}
-              onChange={(e) => setClean(e.target.checked)}
+              checked={formState.clean}
+              onChange={handleCheckboxChange('clean')}
             />
           </label>
         </CheckboxContainer>
@@ -124,11 +141,11 @@ export default function MindfulForm() {
               type="range"
               min={1}
               max={10}
-              value={quality}
-              onChange={(e) => setQuality(parseInt(e.target.value))}
+              value={formState.quality}
+              onChange={handleQualityChange}
             />
           </Label>
-          <span>{quality}</span>
+          <span>{formState.quality}</span>
         </QualityContainer>
         <PhotoContainer>
         <Label>
