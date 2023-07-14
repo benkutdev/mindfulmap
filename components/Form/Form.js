@@ -1,87 +1,94 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import LocationCard from "../LocationCard/LocationCard";
 
-export default function CreateMindfulSpotForm() {
-  const [location, setLocation] = useState("");
-  const [nature, setNature] = useState(false);
-  const [city, setCity] = useState(false);
-  const [loud, setLoud] = useState(false);
-  const [calm, setCalm] = useState(false);
-  const [crowdy, setCrowdy] = useState(false);
-  const [clean, setClean] = useState(false);
-  const [quality, setQuality] = useState(1);
+// Create a single styled container for form fields to reduce duplication
+const FieldContainer = styled.div`
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  align-items: ${props => props.centered ? 'center' : 'flex-start'};
+`;
+
+// Use destructuring assignment for the formState to make the formState references more concise
+export default function MindfulForm() {
+  const [formState, setFormState] = useState({
+    location: "",
+    nature: false,
+    city: false,
+    loud: false,
+    calm: false,
+    crowdy: false,
+    clean: false,
+    quality: 1,
+    photo: null
+  });
+
+  const [submitted, setSubmitted] = useState(false);
+  const {location, nature, city, loud, calm, crowdy, clean, quality, photo} = formState;
+
+  useEffect(() => {
+    const savedState = JSON.parse(localStorage.getItem('locationData'));
+    if (savedState) {
+      setFormState(savedState);
+      setSubmitted(true);
+    }
+  }, []);
+
+  const handleCheckboxChange = (field) => (e) => {
+    setFormState({ ...formState, [field]: e.target.checked });
+  };
+
+  const handleFieldChange = (field) => (e) => {
+    setFormState({ ...formState, [field]: e.target.value });
+  };
+
+  const handleQualityChange = (e) => {
+    setFormState({ ...formState, quality: parseInt(e.target.value) });
+  };
+
+  const handlePhotoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFormState({ ...formState, photo: file });
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log("Form submitted");
+    localStorage.setItem('locationData', JSON.stringify(formState));
+    setSubmitted(true);
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <div>
+      <FieldContainer>
         <label>
           Location:
           <input
             type="text"
             value={location}
-            onChange={(e) => setLocation(e.target.value)}
+            onChange={handleFieldChange('location')}
             required
           />
         </label>
-      </div>
+      </FieldContainer>
 
-      <div>
-        <label>
-          Nature
-          <input
-            type="checkbox"
-            checked={nature}
-            onChange={(e) => setNature(e.target.checked)}
-          />
-        </label>
-        <label>
-          City
-          <input
-            type="checkbox"
-            checked={city}
-            onChange={(e) => setCity(e.target.checked)}
-          />
-        </label>
-        <label>
-          Loud
-          <input
-            type="checkbox"
-            checked={loud}
-            onChange={(e) => setLoud(e.target.checked)}
-          />
-        </label>
-        <label>
-          Calm
-          <input
-            type="checkbox"
-            checked={calm}
-            onChange={(e) => setCalm(e.target.checked)}
-          />
-        </label>
-        <label>
-          Crowdy
-          <input
-            type="checkbox"
-            checked={crowdy}
-            onChange={(e) => setCrowdy(e.target.checked)}
-          />
-        </label>
-        <label>
-          Clean
-          <input
-            type="checkbox"
-            checked={clean}
-            onChange={(e) => setClean(e.target.checked)}
-          />
-        </label>
-      </div>
+      {/* Create an array of checkbox labels and map over them to reduce code duplication */}
+      <FieldContainer>
+        {['Nature', 'City', 'Loud', 'Calm', 'Crowdy', 'Clean'].map((label) => (
+          <label key={label}>
+            {label}
+            <input
+              type="checkbox"
+              checked={formState[label.toLowerCase()]}
+              onChange={handleCheckboxChange(label.toLowerCase())}
+            />
+          </label>
+        ))}
+      </FieldContainer>
 
-      <div>
+      <FieldContainer centered>
         <label>
           Quality:
           <input
@@ -89,15 +96,28 @@ export default function CreateMindfulSpotForm() {
             min={1}
             max={10}
             value={quality}
-            onChange={(e) => setQuality(parseInt(e.target.value))}
+            onChange={handleQualityChange}
           />
         </label>
         <span>{quality}</span>
-      </div>
+      </FieldContainer>
 
-      <div>
+      <FieldContainer>
+        <label>
+          Photo:
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handlePhotoChange}
+          />
+        </label>
+      </FieldContainer>
+
+      <FieldContainer>
         <button type="submit">Create Mindful Spot</button>
-      </div>
+      </FieldContainer>
+
+      {submitted && <LocationCard {...formState} />}
     </form>
   );
 }
