@@ -1,5 +1,5 @@
-import React, { memo, useState, useEffect } from 'react';
-import styled from 'styled-components';
+import React, { memo, useState, useEffect } from "react";
+import styled from "styled-components";
 
 const CardContainer = styled.div`
   border: 1px solid black;
@@ -7,6 +7,11 @@ const CardContainer = styled.div`
   margin-top: 20px;
   display: flex;
   flex-direction: column;
+  width: 400px; /* Set the desired initial width */
+  
+  @media (max-width: 768px) {
+    width: 100%; /* Adjust the width to 100% on screens smaller than 768px */
+  }
 `;
 
 const CardTitle = styled.h3`
@@ -14,8 +19,9 @@ const CardTitle = styled.h3`
 `;
 
 const Image = styled.img`
-  width: 30%;
+  width: 100%;
   height: auto;
+  margin-top: 10px;
 `;
 
 const DeleteButton = styled.button`
@@ -23,7 +29,7 @@ const DeleteButton = styled.button`
   font-size: 100%;
   padding: 0.5em 1em;
   color: #fff;
-  background-color: #C0392B;
+  background-color: #c0392b;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -33,6 +39,7 @@ const DeleteButton = styled.button`
 const CategoryContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
+  margin-top: 10px;
 `;
 
 const CategoryItem = styled.div`
@@ -41,7 +48,7 @@ const CategoryItem = styled.div`
   margin-right: 10px;
 `;
 
-const Checkbox = styled.input.attrs({ type: 'checkbox' })`
+const Checkbox = styled.input.attrs({ type: "checkbox" })`
   cursor: pointer;
 `;
 
@@ -50,45 +57,62 @@ const CheckboxLabel = styled.label`
 `;
 
 const categoryList = [
-  { name: 'Nature', state: 'nature' },
-  { name: 'City', state: 'city' },
-  { name: 'Loud', state: 'loud' },
-  { name: 'Calm', state: 'calm' },
-  { name: 'Crowdy', state: 'crowdy' },
-  { name: 'Clean', state: 'clean' },
+  { name: "Nature", state: "nature" },
+  { name: "City", state: "city" },
+  { name: "Loud", state: "loud" },
+  { name: "Calm", state: "calm" },
+  { name: "Crowdy", state: "crowdy" },
+  { name: "Clean", state: "clean" },
 ];
 
-const LocationCard = memo(({ id, location, nature, city, loud, calm, crowdy, clean, quality, photo, onDelete }) => {
-  const [imageUrl, setImageUrl] = useState(null);
+const LocationCard = memo(
+  ({
+    id,
+    location,
+    nature,
+    city,
+    loud,
+    calm,
+    crowdy,
+    clean,
+    quality,
+    photo,
+    onDelete,
+  }) => {
+    const [imageUrl, setImageUrl] = useState(null);
+    const checkedCategories = categoryList.filter(
+      (category) => eval(category.state)
+    );
 
-  useEffect(() => {
-    if (photo instanceof Blob) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setImageUrl(reader.result);
-      };
-      reader.readAsDataURL(photo);
-    }
-  }, [photo]);
+    useEffect(() => {
+      if (photo instanceof Blob) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          setImageUrl(reader.result);
+        };
+        reader.readAsDataURL(photo);
+      }
+    }, [photo]);
 
-  return (
-    <CardContainer>
-      <CardTitle>{location}</CardTitle>
-      <CategoryContainer>
-        {categoryList.map(({ name, state }) => (
-          <CategoryItem key={state}>
-            <Checkbox checked={eval(state)} readOnly />
-            <CheckboxLabel>{name}</CheckboxLabel>
-          </CategoryItem>
-        ))}
-      </CategoryContainer>
-      <p>Quality: {quality}</p>
-      {imageUrl && <Image src={imageUrl} alt={location} />}
-      <DeleteButton onClick={() => onDelete(id)}>Delete</DeleteButton>
-    </CardContainer>
-  );
-});
+    return (
+      <CardContainer>
+        <CardTitle>{location}</CardTitle>
+        <CategoryContainer>
+          {checkedCategories.map(({ name, state }) => (
+            <CategoryItem key={state}>
+              <Checkbox checked={eval(state)} readOnly />
+              <CheckboxLabel>{name}</CheckboxLabel>
+            </CategoryItem>
+          ))}
+        </CategoryContainer>
+        <p>Location Quality: {quality}</p>
+        {imageUrl && <Image src={imageUrl} alt={location} />}
+        <DeleteButton onClick={() => onDelete(id)}>Delete</DeleteButton>
+      </CardContainer>
+    );
+  }
+);
 
-LocationCard.displayName = 'LocationCard';
+LocationCard.displayName = "LocationCard";
 
 export default LocationCard;
