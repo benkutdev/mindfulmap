@@ -3,6 +3,21 @@ import styled from "styled-components";
 import LocationCard from "../LocationCard/LocationCard";
 import shortid from "shortid";
 
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+`;
+
+const FormContainer = styled.form`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+`;
+
 const FieldContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -141,85 +156,87 @@ export default function MindfulForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <FieldContainer>
-        <label>
-          Location:
-          <input
-            type="text"
-            value={location}
-            onChange={handleFieldChange("location")}
-          />
-        </label>
-      </FieldContainer>
+    <Container>
+      <FormContainer onSubmit={handleSubmit}>
+        <FieldContainer>
+          <label>
+            Location:
+            <input
+              type="text"
+              value={location}
+              onChange={handleFieldChange("location")}
+            />
+          </label>
+        </FieldContainer>
 
-      <FieldContainer>
-        <CheckboxLabel>
-          <Checkbox
-            checked={nature}
-            onChange={handleCheckboxChange("nature")}
-          />
-          Nature
-        </CheckboxLabel>
-        <CheckboxLabel>
-          <Checkbox
-            checked={city}
-            onChange={handleCheckboxChange("city")}
-          />
-          City
-        </CheckboxLabel>
-        <CheckboxLabel>
-          <Checkbox
-            checked={loud}
-            onChange={handleCheckboxChange("loud")}
-          />
-          Loud
-        </CheckboxLabel>
-        <CheckboxLabel>
-          <Checkbox
-            checked={calm}
-            onChange={handleCheckboxChange("calm")}
-          />
-          Calm
-        </CheckboxLabel>
-        <CheckboxLabel>
-          <Checkbox
-            checked={crowdy}
-            onChange={handleCheckboxChange("crowdy")}
-          />
-          Crowdy
-        </CheckboxLabel>
-        <CheckboxLabel>
-          <Checkbox
-            checked={clean}
-            onChange={handleCheckboxChange("clean")}
-          />
-          Clean
-        </CheckboxLabel>
-      </FieldContainer>
+        <FieldContainer>
+          <CheckboxLabel>
+            <Checkbox
+              checked={nature}
+              onChange={handleCheckboxChange("nature")}
+            />
+            Nature
+          </CheckboxLabel>
+          <CheckboxLabel>
+            <Checkbox
+              checked={city}
+              onChange={handleCheckboxChange("city")}
+            />
+            City
+          </CheckboxLabel>
+          <CheckboxLabel>
+            <Checkbox
+              checked={loud}
+              onChange={handleCheckboxChange("loud")}
+            />
+            Loud
+          </CheckboxLabel>
+          <CheckboxLabel>
+            <Checkbox
+              checked={calm}
+              onChange={handleCheckboxChange("calm")}
+            />
+            Calm
+          </CheckboxLabel>
+          <CheckboxLabel>
+            <Checkbox
+              checked={crowdy}
+              onChange={handleCheckboxChange("crowdy")}
+            />
+            Crowdy
+          </CheckboxLabel>
+          <CheckboxLabel>
+            <Checkbox
+              checked={clean}
+              onChange={handleCheckboxChange("clean")}
+            />
+            Clean
+          </CheckboxLabel>
+        </FieldContainer>
 
-      <FieldContainer>
-        <label>
-          Quality:
-          <input
-            type="range"
-            value={quality}
-            min={1}
-            max={10}
-            onChange={handleQualityChange}
-          />
-          <QualityValue>{quality}</QualityValue>
-        </label>
-      </FieldContainer>
+        <FieldContainer>
+          <label>
+            Quality:
+            <input
+              type="range"
+              value={quality}
+              min={1}
+              max={10}
+              onChange={handleQualityChange}
+            />
+            <QualityValue>{quality}</QualityValue>
+          </label>
+        </FieldContainer>
 
-      <FieldContainer>
-        <FileInputLabel>
-          Upload Photo
-          <FileInput onChange={handlePhotoChange} />
-        </FileInputLabel>
-      </FieldContainer>
+        <FieldContainer>
+          <FileInputLabel>
+            Upload Photo
+            <FileInput onChange={handlePhotoChange} />
+          </FileInputLabel>
+        </FieldContainer>
 
-      <Button type="submit">Create Mindful Spot</Button>
+        <Button type="submit">Create Mindful Spot</Button>
+      </FormContainer>
 
       {submittedData.map((data) => (
         <LocationCard
@@ -228,6 +245,6 @@ export default function MindfulForm() {
           onDelete={() => deleteCard(data.id)}
         />
       ))}
-    </form>
+    </Container>
   );
 }
